@@ -1,5 +1,7 @@
-torch==2.1.0
-transformers==4.40.0
+torch==2.6.0
+transformers==4.46.3
+tokenizers==0.20.3
+flash-attn==2.7.3
 Pillow>=10.0.0
 requests>=2.31.0
 pdf2image>=1.16.0
