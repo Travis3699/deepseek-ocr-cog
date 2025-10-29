@@ -11,6 +11,7 @@ build:
   # 改用 run 命令（相容舊版 Cog）
   run:
     - pip install torch==2.6.0
+    - pip install torchvision==0.17.1      # ← 關鍵新package
     - pip install transformers==4.46.3
     - pip install tokenizers==0.20.3
     - pip install flash-attn==2.7.3
@@ -20,5 +21,7 @@ build:
     - pip install PyMuPDF>=1.23.0
     - pip install addict>=2.4.0
     - pip install matplotlib>=3.7.0
+    - pip install numpy<2.0
+
 
 predict: predict.py:Predictor
