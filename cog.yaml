@@ -1,13 +1,13 @@
 build:
-  # ❌ 改為 CPU 版本
-  gpu: false
+  gpu: true
+  cuda: "11.8"
   python_version: "3.11"
   
   system_packages:
     - "libsm6"
     - "libxext6"
     - "libxrender-dev"
-  
-  python_requirements: requirements.txt
 
-predict: "predict.py:Predictor"
+predict: predict.py:Predictor
+
+python_requirements: requirements.txt
