@@ -1,4 +1,4 @@
-torch>=2.1.0
+torch==2.1.0
 transformers==4.40.0
 Pillow>=10.0.0
 requests>=2.31.0
@@ -6,4 +6,4 @@ pdf2image>=1.16.0
 PyMuPDF>=1.23.0
 addict>=2.4.0
 matplotlib>=3.7.0
-numpy>=1.24.0
+numpy<2.0
