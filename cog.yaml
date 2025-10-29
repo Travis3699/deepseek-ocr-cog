@@ -1,8 +1,7 @@
-# Cog 配置文件
-# 自動處理 GPU + CUDA 配置
+# Cog 配置文件（新版語法）
 
 build:
-  # GPU 配置 - 無需自己寫 Dockerfile！
+  # GPU 配置
   gpu: true
   cuda: "12.1"
   
@@ -14,15 +13,9 @@ build:
     - "libsm6"
     - "libxext6"
     - "libxrender-dev"
+  
+  # Python 依賴（新版語法：用 python_requirements）
+  python_requirements: requirements.txt
 
-# 預測入口點（指向 predict.py 中的 Predictor 類）
-predict: predict.py:Predictor
-
-# Python 套件依賴
-python_packages:
-  - torch==2.4.0
-  - transformers>=4.40.0
-  - Pillow>=10.0.0
-  - requests>=2.31.0
-  - pdf2image>=1.16.0
-  - PyMuPDF>=1.23.0
+# 預測入口點
+predict: "predict.py:Predictor"
