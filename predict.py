@@ -22,52 +22,34 @@ class Predictor(BasePredictor):
 
         model_name = "deepseek-ai/DeepSeek-OCR"
 
-        # 加載 Tokenizer
         print("📖 加載 Tokenizer...")
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_name,
             trust_remote_code=True
         )
 
-        # 加載模型
-        print("🧠 加載模型（首次會下載 ~5-10 分鐘）...")
+        print("🧠 加載模型...")
+        # CPU 友善配置
         self.model = AutoModel.from_pretrained(
             model_name,
             trust_remote_code=True,
-            torch_dtype=torch.bfloat16,
-            attn_implementation="flash_attention_2"
+            torch_dtype=torch.float32,  # CPU 支持
+            low_cpu_mem_usage=True  # 節省記憶體
         )
 
-        # GPU 自動支持（Cog 自動處理）
-        if torch.cuda.is_available():
-            self.model = self.model.cuda()
-            print(f"✅ 模型已加載到 GPU: {torch.cuda.get_device_name(0)}")
-        else:
-            print("⚠️  使用 CPU（會較慢）")
-
+        # 如果有 GPU 則使用
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.model = self.model.to(self.device)
         self.model.eval()
-        print("✅ 模型已準備就緒！\n")
+        
+        print(f"✅ 模型已加載到 {self.device}")
 
     def predict(
         self,
-        image_url: str = Input(
-            description="Image URL, Base64, or file path (JPG/PNG/WebP/PDF)"
-        ),
-        prompt: str = Input(
-            default="Convert the document to markdown",
-            description="OCR 提示詞"
-        ),
+        image_url: str = Input(description="Image URL"),
+        prompt: str = Input(default="Extract all text from this document")
     ) -> str:
-        """
-        OCR 推理端點
-
-        Args:
-            image_url: 圖像 URL 或 Base64
-            prompt: 指導 OCR 的提示詞
-
-        Returns:
-            提取的文本內容
-        """
+        """OCR 推理"""
         try:
             print(f"🔄 處理請求...")
 
@@ -93,7 +75,7 @@ class Predictor(BasePredictor):
                     crop_mode=True
                 )
 
-            # 清理臨時文件
+            # 清理
             os.remove(image_path)
 
             print(f"✅ OCR 完成！")
@@ -104,26 +86,18 @@ class Predictor(BasePredictor):
             raise
 
     def _load_image(self, image_input: str) -> Image.Image:
-        """
-        加載圖像
-        支持：URL、Base64、本地文件
-        """
-        # 如果是 URL
+        """加載圖像"""
         if image_input.startswith("http"):
             print("   📥 從 URL 下載圖像...")
             response = requests.get(image_input, timeout=30)
             response.raise_for_status()
             return Image.open(BytesIO(response.content)).convert("RGB")
-
-        # 如果是 Base64
         elif image_input.startswith("data:"):
             print("   🔐 解碼 Base64...")
             import base64
-            base64_str = image_input.split(",")
+            base64_str = image_input.split(",")[1]
             image_bytes = base64.b64decode(base64_str)
             return Image.open(BytesIO(image_bytes)).convert("RGB")
-
-        # 其他情況視為本地文件
         else:
             print("   📂 加載本地文件...")
             return Image.open(image_input).convert("RGB")
