@@ -1,21 +1,13 @@
-# Cog 配置文件（新版語法）
-
 build:
-  # GPU 配置
-  gpu: true
-  cuda: "12.1"
-  
-  # Python 版本
+  # ❌ 改為 CPU 版本
+  gpu: false
   python_version: "3.11"
   
-  # 系統依賴
   system_packages:
     - "libsm6"
     - "libxext6"
     - "libxrender-dev"
   
-  # Python 依賴（新版語法：用 python_requirements）
   python_requirements: requirements.txt
 
-# 預測入口點
 predict: "predict.py:Predictor"
