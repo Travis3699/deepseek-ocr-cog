@@ -1,27 +1,24 @@
 build:
   gpu: true
   cuda: "11.8"
-  python_version: "3.11"
+  python_version: "3.12"
   
   system_packages:
     - "libsm6"
     - "libxext6"
     - "libxrender-dev"
   
-  # 改用 run 命令（相容舊版 Cog）
   run:
-    - pip install torch==2.6.0
-    - pip install torchvision==0.17.1      # ← 關鍵新package
-    - pip install transformers==4.46.3
-    - pip install tokenizers==0.20.3
-    - pip install flash-attn==2.7.3
-    - pip install Pillow>=10.0.0
-    - pip install requests>=2.31.0
-    - pip install pdf2image>=1.16.0
-    - pip install PyMuPDF>=1.23.0
-    - pip install addict>=2.4.0
-    - pip install matplotlib>=3.7.0
-    - pip install numpy<2.0
-
+    - pip install --no-cache-dir torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cu118
+    - pip install --no-cache-dir transformers==4.46.3
+    - pip install --no-cache-dir tokenizers==0.20.3
+    - pip install --no-cache-dir flash-attn==2.7.3 --no-build-isolation
+    - pip install --no-cache-dir Pillow>=10.0.0
+    - pip install --no-cache-dir requests>=2.31.0
+    - pip install --no-cache-dir pdf2image>=1.16.0
+    - pip install --no-cache-dir PyMuPDF>=1.23.0
+    - pip install --no-cache-dir addict>=2.4.0
+    - pip install --no-cache-dir easydict>=1.9
+    - pip install --no-cache-dir einops>=0.8.0
 
 predict: predict.py:Predictor
